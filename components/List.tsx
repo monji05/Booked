@@ -1,19 +1,23 @@
-import React, {useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import Item from '../components/Item'
 import type {bookData} from '../components/Item'
-import api from '../pages/api/api'
+import books from '../pages/api/books'
 import shortid from 'shortid'
+import axios from 'axios'
+import type { Data } from '../pages/api/like'
 
 export default function List() {
-  const [bookData, setBookData] = useState<bookData[]>([])
   const [searchValue, setSearchValue] = useState("")
+  const [bookData, setBookData] = useState<bookData[]>([])
+  const [isLike, setLikeState] = useState(false)
+  const [bookIds, setBookIds] = useState<Data[]>()
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
 
   const fetchBookData = (searchValue: string) => {
-    api.get("", {
+    books.get("", {
       params: {
         "q": searchValue,
         "maxResults": 40
@@ -29,12 +33,22 @@ export default function List() {
     fetchBookData(searchValue)
   }
 
+  const getLike = async () => {
+    const res = await axios.get('/api/like')
+    const resBookIds = res.data.map((resBook: any) => resBook.book_id)
+    setBookIds(resBookIds)
+  }
+
+  useEffect(() => {
+    getLike()
+  }, [])
+
   return (
     <div>
       <div className='text-center py-2'>
         <form onSubmit={handleSubmit}>
           <label className='relative flex'>
-            <span className='absolute flex mt-2.5 pl-2 ml-56'>
+            <span className='absolute flex mt-2.5 pl-2 ml-20'>
               <svg className='h-5 w-5 fill-gray-50 text-slate-400' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -56,13 +70,13 @@ export default function List() {
                 focus:outlilne-none
                 focus:border-cyan-300
                 sm:text-sm
-                ml-56
+                ml-20
               '
               placeholder='Search holder anything ...'
               onChange={handleChange}
               value={searchValue}
             />
-          <button className='rounded bg-sky-500 hover:bg-sky-400 mr-56 px-2 ml-2 pb-1 text-m text-white'>search</button>
+            <button className='rounded bg-sky-500 hover:bg-sky-400 mr-20 px-2 ml-2 pb-1 text-m text-white'>search</button>
           </label>
         </form>
       </div>
@@ -70,6 +84,7 @@ export default function List() {
         bookData? bookData.map((book:bookData) => {
           return (
             <Item
+              id={book.id}
               key={shortid.generate()}
               authors={book.volumeInfo.authors}
               title={book.volumeInfo.title}

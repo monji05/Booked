@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const baseUrl = "https://www.googleapis.com/books/v1/volumes?"
-const api = axios.create({
+const books = axios.create({
   baseURL: baseUrl,
   responseType: "json",
   headers: {
@@ -9,4 +9,4 @@ const api = axios.create({
   }
 })
 
-export default api
+export default books
