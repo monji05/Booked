@@ -3,6 +3,7 @@ import {cert} from 'firebase-admin/app'
 import {getFirestore, QuerySnapshot} from 'firebase-admin/firestore'
 import admin from "firebase-admin"
 import serviceAccount from "../../service-account-sdk.json"
+import shortid from 'shortid'
 
 // let app
 // if(!app) {
@@ -14,11 +15,11 @@ import serviceAccount from "../../service-account-sdk.json"
 // }
 
 export type Data = {
-  book_id: String | null,
+  book_id: String,
 }
 
-const COLLECTION_NAME = 'like';
-const db = getFirestore()
+export const COLLECTION_NAME = 'like';
+export const db = getFirestore()
 export const dbCollection = db.collection(COLLECTION_NAME)
 
 async function getBooks(res: NextApiResponse<Data[]>) {
@@ -26,7 +27,7 @@ async function getBooks(res: NextApiResponse<Data[]>) {
   if (querySnapshots.empty) {
     res.status(200).json([
       {
-        book_id: null
+        book_id: "not found ."
       }
     ])
   } else {
@@ -64,15 +65,14 @@ async function postBooks(req: NextApiRequest, res:NextApiResponse<Data>) {
     res.end()
   })
   res.end()
-
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<any>) {
   try {
 
     if (req.method === 'GET') {
-
       await getBooks(res)
+      // await fetchbookIds(res)
     }
 
     if (req.method === 'POST') {
@@ -87,21 +87,18 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const fetchbookIds = () => {
-  let bookIds:Data[] = []
+export const fetchbookIds = async (res: NextApiResponse) => {
+  let bookIds: string[] = []
   const unsubcribe = () => {
     dbCollection
     .onSnapshot((snapshot) => {
-      snapshot.forEach(doc => {
-        bookIds.push(
-          {
-            book_id: doc.get('book_id')
-          }
-        )
+      snapshot.docs.map(doc => {
+        bookIds.push(doc.data().book_id)
       })
     })
   }
   unsubcribe()
-  return bookIds
+  console.log(bookIds)
+  res.end()
 }
 

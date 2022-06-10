@@ -1,9 +1,10 @@
 import axios from 'axios'
-import React,{useState, useEffect} from 'react'
+import React,{useState, useEffect, SetStateAction} from 'react'
 import shortid from 'shortid'
 import Noimage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
 import ClassNames from './ClassNames'
+import type { Data } from '../pages/api/like'
 
 export type bookData = {
   id: string
@@ -18,23 +19,27 @@ export type bookData = {
 }
 
 type props = {
+  initialLike: boolean
+  bookIds: string[],
   id: string,
   authors?: String[],
   title: string,
   description: string,
-  thumbnail: string
+  thumbnail: string,
 }
 
 export default function Item(props:props) {
-  const [isLike, setLikeState] = useState(false)
-
   const {
+    initialLike,
+    bookIds,
     id,
     authors,
     title,
     description,
-    thumbnail
+    thumbnail,
   } = props
+
+  const [isLike, setIsLike] = useState(initialLike)
 
   const clickHandler = async () => {
     await axios.post('/api/like',
@@ -42,7 +47,7 @@ export default function Item(props:props) {
         book_id: id,
       }
     )
-    setLikeState(!isLike)
+    setIsLike(!isLike)
   }
 
   return(

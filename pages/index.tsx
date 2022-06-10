@@ -11,7 +11,7 @@ const Home: NextPage = () => {
         <meta name="description" content="show you searched books ." />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <List />
+      <List/>
     </div>
   )
 }
