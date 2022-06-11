@@ -1,25 +1,22 @@
 import type {NextApiRequest, NextApiResponse} from 'next'
 import {cert} from 'firebase-admin/app'
-import {getFirestore, QuerySnapshot} from 'firebase-admin/firestore'
 import admin from "firebase-admin"
 import serviceAccount from "../../service-account-sdk.json"
-import shortid from 'shortid'
 
-// let app
-// if(!app) {
-//   app = admin.initializeApp(
-//     {
-//       credential: cert(serviceAccount)
-//     }
-//   )
-// }
+if(!admin.apps.length) {
+  admin.initializeApp(
+    {
+      credential: cert(serviceAccount)
+    }
+  )
+}
 
 export type Data = {
   book_id: String,
 }
 
-export const COLLECTION_NAME = 'like';
-export const db = getFirestore()
+const COLLECTION_NAME = 'like';
+const db = admin.firestore()
 export const dbCollection = db.collection(COLLECTION_NAME)
 
 async function getBooks(res: NextApiResponse<Data[]>) {

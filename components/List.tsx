@@ -4,20 +4,19 @@ import type {bookData} from '../components/Item'
 import books from '../pages/api/books'
 import shortid from 'shortid'
 import axios from 'axios'
-import type {Data} from '../pages/api/like'
 
 export default function List() {
   const [searchValue, setSearchValue] = useState("")
   const [bookData, setBookData] = useState<bookData[]>([])
   const [bookIds, setBookIds] = useState<string[]>()
-  const [isLike, setLike] = useState(false)
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }
 
-  const fetchBookData = (searchValue: string) => {
-    books.get("", {
+  const fetchBookData = async (searchValue: string) => {
+    getLike()
+    await books.get("", {
       params: {
         "q": searchValue,
         "maxResults": 40
@@ -33,16 +32,14 @@ export default function List() {
     fetchBookData(searchValue)
   }
 
-  const getLike = async () => {
-    const resBookData = await axios.get('/api/like')
-    const resbookId = resBookData.data.map((bookId:Data) => bookId.book_id)
-    setBookIds(resbookId)
+  const getLike = async() => {
+    const resBookIds = await axios.get('/api/like')
+    setBookIds(resBookIds.data.map((bookId: any)  => bookId.book_id))
   }
 
   useEffect(() => {
     getLike()
   }, [])
-
 
   return (
     <div>
@@ -85,8 +82,7 @@ export default function List() {
         bookData? bookData.map((book:bookData) => {
           return (
             <Item
-              initialLike={bookIds?.includes(book.id)? true : false}
-              bookIds={bookIds}
+              initialLike={bookIds.includes(book.id)? true : false}
               id={book.id}
               key={shortid.generate()}
               authors={book.volumeInfo.authors}

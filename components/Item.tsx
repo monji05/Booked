@@ -1,10 +1,9 @@
 import axios from 'axios'
-import React,{useState, useEffect, SetStateAction} from 'react'
+import React,{useState} from 'react'
 import shortid from 'shortid'
 import Noimage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
 import ClassNames from './ClassNames'
-import type { Data } from '../pages/api/like'
 
 export type bookData = {
   id: string
@@ -20,7 +19,6 @@ export type bookData = {
 
 type props = {
   initialLike: boolean
-  bookIds: string[],
   id: string,
   authors?: String[],
   title: string,
@@ -31,7 +29,6 @@ type props = {
 export default function Item(props:props) {
   const {
     initialLike,
-    bookIds,
     id,
     authors,
     title,
