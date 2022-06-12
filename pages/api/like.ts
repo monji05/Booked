@@ -69,7 +69,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     if (req.method === 'GET') {
       await getBooks(res)
-      // await fetchbookIds(res)
+      // await fetchBookIds(res)
     }
 
     if (req.method === 'POST') {
@@ -84,9 +84,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
   }
 }
 
-export const fetchbookIds = async (res: NextApiResponse) => {
+export const fetchBookIds = async (res: NextApiResponse) => {
   let bookIds: string[] = []
-  const unsubcribe = () => {
+  const unSubscribe = () => {
     dbCollection
     .onSnapshot((snapshot) => {
       snapshot.docs.map(doc => {
@@ -94,7 +94,7 @@ export const fetchbookIds = async (res: NextApiResponse) => {
       })
     })
   }
-  unsubcribe()
+  unSubscribe()
   console.log(bookIds)
   res.end()
 }

@@ -1,7 +1,7 @@
 import axios from 'axios'
 import React,{useState} from 'react'
 import shortid from 'shortid'
-import Noimage from '../svg/no-image.svg'
+import NoImage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
 import ClassNames from './ClassNames'
 
@@ -48,24 +48,16 @@ export default function Item(props:props) {
   }
 
   return(
-    <div className='relative flex mx-20 space-x-4 mb-10 px-2 py-2 shadow-lg bg-white rounded'>
+    <div className='relative flex w-1/3  h-48 space-x-4 m-auto mb-10 px-2 py-2 shadow-lg bg-white rounded'>
       {thumbnail?
         <img src={thumbnail}/>
         :
-        <Noimage className='bg-zinc-200 shrink-0'/>
+        <NoImage className='w-32 h-44 bg-zinc-200 shrink-0' />
       }
       <div className='text-left'>
-        <p className='text-2xl font-bold'>{title}</p>
-        <div className='text-sm mb-3 flex space-x-1'>{
-          authors?.map((author:String) => {
-            return (
-              <p key={shortid.generate()}>{author}</p>
-            )
-          })
-        }
-        </div>
-        <div>
-          <p>{description}</p>
+        <p className='text-xl font-bold'>{title}</p>
+        <div className='text-sm mb-3 flex space-x-1'>
+          <p>著者: {authors?.map((author: String) => { return `${author} ` })}</p>
         </div>
         <button onClick={()=>clickHandler()}>
           {

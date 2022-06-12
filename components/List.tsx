@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Item from '../components/Item'
 import type {bookData} from '../components/Item'
 import books from '../pages/api/books'
@@ -8,7 +8,7 @@ import axios from 'axios'
 export default function List() {
   const [searchValue, setSearchValue] = useState("")
   const [bookData, setBookData] = useState<bookData[]>([])
-  const [bookIds, setBookIds] = useState<string[]>()
+  const [bookIds, setBookIds] = useState<string[]>([])
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
@@ -32,29 +32,24 @@ export default function List() {
     fetchBookData(searchValue)
   }
 
-  const getLike = async() => {
+  const getLike = async () => {
     const resBookIds = await axios.get('/api/like')
-    setBookIds(resBookIds.data.map((bookId: any)  => bookId.book_id))
+    setBookIds(resBookIds.data.map((bookId: any) => bookId.book_id))
   }
-
-  useEffect(() => {
-    getLike()
-  }, [])
 
   return (
     <div>
-      <div className='text-center py-2'>
+      <div className='text-center py-2 pl-96 pb-10'>
         <form onSubmit={handleSubmit}>
-          <label className='relative flex'>
-            <span className='absolute flex mt-2.5 pl-2 ml-20'>
-              <svg className='h-5 w-5 fill-gray-50 text-slate-400' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
+          <label className='relative flex ml-3'>
+            <span className='absolute flex mt-2.5 pl-2 ml-60'>
+              <svg className='h-5 w-5 fill-white text-slate-400' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
             </span>
             <input
               className='
-                w-full
-                placeholder:italic
+                w-64
                 placeholder:text-slate-400
                 block
                 bg-white
@@ -65,16 +60,17 @@ export default function List() {
                 pl-9
                 pr-3
                 shadow-sm
-                focus:outlilne-none
-                focus:border-cyan-300
+                focus:outline-none
+                focus:border-cyan-600
+                focus:rounded-md
                 sm:text-sm
-                ml-20
+                ml-60
               '
-              placeholder='Search holder anything ...'
+              placeholder='本のタイトル、著者名を入力'
               onChange={handleChange}
               value={searchValue}
             />
-            <button className='rounded bg-sky-500 hover:bg-sky-400 mr-20 px-2 ml-2 pb-1 text-m text-white'>search</button>
+            <button className='rounded-md bg-sky-500 hover:bg-sky-400 mr-60 px-2 ml-2 pb-1 text-m text-white'>検索</button>
           </label>
         </form>
       </div>
@@ -93,7 +89,7 @@ export default function List() {
           )
         })
         :
-          <div className='border-solid text-center text-xl text-rose-600'>No book found .</div>
+          <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
       }
     </div>
   )
