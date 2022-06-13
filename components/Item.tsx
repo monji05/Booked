@@ -48,7 +48,7 @@ export default function Item(props:props) {
   }
 
   return(
-    <div className='relative flex w-1/3  h-48 space-x-4 m-auto mb-10 px-2 py-2 shadow-lg bg-white rounded'>
+    <div className='relative flex h-48 space-x-4 m-auto mt-10 px-2 py-2 shadow-lg bg-stone-50 rounded'>
       {thumbnail?
         <img src={thumbnail}/>
         :

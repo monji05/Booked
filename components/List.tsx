@@ -38,11 +38,11 @@ export default function List() {
   }
 
   return (
-    <div>
-      <div className='text-center py-2 pl-96 pb-10'>
+    <div className='min-h-screen'>
+      <div className='text-center py-2 w-1/3 m-auto'>
         <form onSubmit={handleSubmit}>
-          <label className='relative flex ml-3'>
-            <span className='absolute flex mt-2.5 pl-2 ml-60'>
+          <label className='relative flex'>
+            <span className='absolute flex mt-2.5 pl-2'>
               <svg className='h-5 w-5 fill-white text-slate-400' xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
                 <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -64,7 +64,6 @@ export default function List() {
                 focus:border-cyan-600
                 focus:rounded-md
                 sm:text-sm
-                ml-60
               '
               placeholder='本のタイトル、著者名を入力'
               onChange={handleChange}
@@ -74,11 +73,12 @@ export default function List() {
           </label>
         </form>
       </div>
+      <div className='w-1/3 m-auto'>
       {
         bookData? bookData.map((book:bookData) => {
           return (
             <Item
-              initialLike={bookIds.includes(book.id)? true : false}
+              initialLike={bookIds.includes(book.id) ? true : false}
               id={book.id}
               key={shortid.generate()}
               authors={book.volumeInfo.authors}
@@ -89,8 +89,9 @@ export default function List() {
           )
         })
         :
-          <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
+            <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
       }
+      </div>
     </div>
   )
 }
