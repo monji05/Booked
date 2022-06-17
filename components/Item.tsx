@@ -1,5 +1,5 @@
 import axios from 'axios'
-import React,{useState} from 'react'
+import React, { useState, useEffect } from 'react'
 import shortid from 'shortid'
 import NoImage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
@@ -18,7 +18,6 @@ export type bookData = {
 }
 
 type props = {
-  initialLike: boolean
   id: string,
   authors?: String[],
   title: string,
@@ -28,7 +27,6 @@ type props = {
 
 export default function Item(props:props) {
   const {
-    initialLike,
     id,
     authors,
     title,
@@ -36,14 +34,9 @@ export default function Item(props:props) {
     thumbnail,
   } = props
 
-  const [isLike, setIsLike] = useState(initialLike)
+  const [isLike, setIsLike] = useState(false)
 
   const clickHandler = async () => {
-    await axios.post('/api/like',
-      {
-        book_id: id,
-      }
-    )
     setIsLike(!isLike)
   }
 
@@ -59,7 +52,7 @@ export default function Item(props:props) {
         <div className='text-sm mb-3 flex space-x-1'>
           <p>著者: {authors?.map((author: String) => { return `${author} ` })}</p>
         </div>
-        <button onClick={()=>clickHandler()}>
+        <button onClick={() => clickHandler()}>
           {
             <Heart
               key={shortid.generate()}
