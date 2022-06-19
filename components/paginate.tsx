@@ -19,23 +19,31 @@ const MyPaginate = (props: props) => {
   } = props
 
   const onPageChange = (event: any) => {
-    setCurrentPage(event.selected + 1)
+    const selectedPage = event.selected + 1
+    if (selectedPage > totalPageCount) {
+      setCurrentPage(1)
+    } else {
+      setCurrentPage(selectedPage)
+    }
   }
 
   useEffect(() => {
-    console.log(currentPage)
     fetchBookData(searchValue, currentPage)
   }, [currentPage])
 
   return (
-    <ReactPaginate
-      className='w-48 m-auto mb-2 text-center flex space-x-1 text-xl'
-      breakLabel="..."
-      previousLabel={currentPage == 1 ? "" : "<"}
-      nextLabel={currentPage == totalPageCount ? "" : ">"}
-      onPageChange={onPageChange}
-      pageCount={totalPageCount}
-    />
+    <div>
+      <ReactPaginate
+        className='mb-2 text-center flex space-x-5 text-xl bg-white text-cyan-500'
+        breakLabel="..."
+        previousLabel={currentPage == 1 ? "" : "<"}
+        nextLabel={currentPage == totalPageCount ? "" : ">"}
+        pageRangeDisplayed={1}
+        onPageChange={onPageChange}
+        marginPagesDisplayed={2}
+        pageCount={totalPageCount}
+      />
+    </div>
   )
 }
 

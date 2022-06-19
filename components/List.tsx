@@ -18,6 +18,7 @@ export default function List() {
   }, [])
 
   const fetchBookData = async (searchValue: string, currentPage: number) => {
+    if (searchValue === "") return
     await books.get("", {
       params: {
         "keyword": searchValue,
@@ -35,6 +36,7 @@ export default function List() {
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (searchValue == "") return
+    setCurrentPage(1)
     fetchBookData(searchValue, currentPage)
   }
 
