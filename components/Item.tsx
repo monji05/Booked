@@ -5,52 +5,48 @@ import NoImage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
 import ClassNames from './ClassNames'
 
-export type bookData = {
-  id: string
-  volumeInfo: {
-    authors?: String[],
-    title: string,
-    description: string,
-    imageLinks?: {
-      thumbnail?: string
-    }
-  }
-}
-
 type props = {
-  id: string,
-  authors?: String[],
+  isLike: boolean,
+  setIsLike: (arg: boolean) => void,
+  author: string,
   title: string,
-  description: string,
-  thumbnail: string,
+  booksGenreId: string,
+  itemCaption: string,
+  itemPrice: number,
+  itemUrl: string,
+  largeImageUrl: string,
+  reviewAverage: string,
+  reviewCount: number,
+  salesData: string
 }
 
-export default function Item(props:props) {
+export default function Item(props: props) {
   const {
-    id,
-    authors,
+    isLike,
+    setIsLike,
+    author,
     title,
-    description,
-    thumbnail,
+    booksGenreId,
+    itemCaption,
+    itemPrice,
+    itemUrl,
+    largeImageUrl,
+    reviewAverage,
+    reviewCount,
+    salesData,
   } = props
-
-  const [isLike, setIsLike] = useState(false)
 
   const clickHandler = async () => {
     setIsLike(!isLike)
   }
 
-  return(
-    <div className='relative flex h-48 space-x-4 m-auto mt-10 px-2 py-2 shadow-lg bg-stone-50 rounded'>
-      {thumbnail?
-        <img src={thumbnail}/>
-        :
-        <NoImage className='w-32 h-44 bg-zinc-200 shrink-0' />
-      }
+  return (
+    <div className='relative flex h-52 space-x-4 m-auto mb-10 px-2 py-2 shadow-lg shadow-slate-400 bg-stone-50 rounded'>
+      <img src={largeImageUrl} />
       <div className='text-left'>
         <p className='text-xl font-bold'>{title}</p>
         <div className='text-sm mb-3 flex space-x-1'>
-          <p>著者: {authors?.map((author: String) => { return `${author} ` })}</p>
+          <p>著者: {author}</p>
         </div>
         <button onClick={() => clickHandler()}>
           {
@@ -60,7 +56,7 @@ export default function Item(props:props) {
                 ClassNames(
                   isLike ?
                     "fill-rose-600"
-                  :
+                    :
                     "fill-white"
                   ,
                   "absolute w-7 h-7 text-rose-600 right-0 bottom-0"

@@ -1,34 +1,41 @@
-import React, { useState } from 'react'
+import React, { isValidElement, useCallback, useState } from 'react'
 import Item from '../components/Item'
-import type {bookData} from '../components/Item'
+import type { responseBookData } from '../pages/api/books'
 import books from '../pages/api/books'
 import shortid from 'shortid'
 import BookSearch from './BookSearch'
+import MyPaginate from './paginate'
 
 export default function List() {
   const [searchValue, setSearchValue] = useState("")
-  const [bookData, setBookData] = useState<bookData[]>([])
-  const [bookIds, setBookIds] = useState<string[]>([])
+  const [bookData, setBookData] = useState<responseBookData[]>([])
+  const [totalPageCount, setTotalPageCount] = useState(1)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [isLike, setIsLike] = useState(false)
 
-  const handleChangeValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
-  }
+  }, [])
 
-  const fetchBookData = async (searchValue: string) => {
+  const fetchBookData = async (searchValue: string, currentPage: number) => {
     await books.get("", {
       params: {
-        "q": searchValue,
-        "maxResults": 40
+        "keyword": searchValue,
+        "page": currentPage
       }
-    }).then((res: any) =>
-      setBookData(res.data.items)
-    )
+    }).then((res: any) => {
+      setBookData(res.data.Items)
+      setTotalPageCount(res.data.pageCount)
+      setCurrentPage(res.data.page)
+    }).catch(error => {
+      console.error(error)
+    })
   }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (searchValue == "") return
-    fetchBookData(searchValue)
+    fetchBookData(searchValue, currentPage)
   }
 
   return (
@@ -39,22 +46,36 @@ export default function List() {
         searchValue={searchValue}
       />
       <div className='w-1/3 m-auto'>
-      {
-        bookData? bookData.map((book:bookData) => {
-          return (
-            <Item
-              id={book.id}
-              key={shortid.generate()}
-              authors={book.volumeInfo.authors}
-              title={book.volumeInfo.title}
-              description={book.volumeInfo.description}
-              thumbnail={book.volumeInfo.imageLinks?.thumbnail || ""}
-            />
-          )
-        })
+        <MyPaginate
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+          totalPageCount={totalPageCount}
+          searchValue={searchValue}
+          fetchBookData={fetchBookData}
+        />
+        {
+          bookData ? bookData.map((book: responseBookData) => {
+            return (
+              <Item
+                isLike={isLike}
+                setIsLike={setIsLike}
+                key={shortid.generate()}
+                author={book.Item.author}
+                title={book.Item.title}
+                booksGenreId={book.Item.booksGenreId}
+                itemCaption={book.Item.itemCaption}
+                itemPrice={book.Item.itemPrice}
+                itemUrl={book.Item.itemUrl}
+                largeImageUrl={book.Item.largeImageUrl}
+                reviewAverage={book.Item.reviewAverage}
+                reviewCount={book.Item.reviewCount}
+                salesData={book.Item.salesData}
+              />
+            )
+          })
         :
             <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
-      }
+        }
       </div>
     </div>
   )
