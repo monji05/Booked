@@ -11,7 +11,7 @@ export type responseBookData = {
     largeImageUrl: string,
     reviewAverage: string,
     reviewCount: number,
-    salesData: string
+    salesDate: string
   }
 }
 

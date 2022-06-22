@@ -20,11 +20,7 @@ const MyPaginate = (props: props) => {
 
   const onPageChange = (event: any) => {
     const selectedPage = event.selected + 1
-    if (selectedPage > totalPageCount) {
-      setCurrentPage(1)
-    } else {
-      setCurrentPage(selectedPage)
-    }
+    setCurrentPage(selectedPage)
   }
 
   useEffect(() => {
@@ -34,14 +30,19 @@ const MyPaginate = (props: props) => {
   return (
     <div>
       <ReactPaginate
-        className='mb-2 text-center flex space-x-5 text-xl bg-white text-cyan-500'
+        className='mb-2 flex justify-center text-xl p-1 space-x-1 text-blue-400'
         breakLabel="..."
-        previousLabel={currentPage == 1 ? "" : "<"}
-        nextLabel={currentPage == totalPageCount ? "" : ">"}
+        previousLabel={currentPage == 1 && searchValue ? "" : "<"}
+        nextLabel={currentPage < totalPageCount ? ">" : ""}
+        initialPage={1}
         pageRangeDisplayed={1}
         onPageChange={onPageChange}
         marginPagesDisplayed={2}
         pageCount={totalPageCount}
+        pageClassName='page-item'
+        pageLinkClassName='page-link bg-white border-2 border-none rounded-full px-2'
+        activeClassName='active rounded-full'
+        activeLinkClassName='active bg-amber-400 text-white'
       />
     </div>
   )

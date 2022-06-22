@@ -14,7 +14,7 @@ export default function BookSearch(props: props) {
   } = props
 
   return (
-    <div className='text-center py-2 w-1/3 m-auto'>
+    <div className='text-center py-2 w-1/3 m-auto mb-4'>
       <form onSubmit={handleSubmit}>
         <label className='relative flex'>
           <span className='absolute flex mt-2.5 pl-2'>

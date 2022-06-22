@@ -7,10 +7,11 @@ import BookSearch from './BookSearch'
 import MyPaginate from './paginate'
 
 export default function List() {
+  const initialPage = 1
   const [searchValue, setSearchValue] = useState("")
   const [bookData, setBookData] = useState<responseBookData[]>([])
-  const [totalPageCount, setTotalPageCount] = useState(1)
-  const [currentPage, setCurrentPage] = useState(1)
+  const [totalPageCount, setTotalPageCount] = useState(0)
+  const [currentPage, setCurrentPage] = useState(initialPage)
   const [isLike, setIsLike] = useState(false)
 
   const handleChangeValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -27,17 +28,16 @@ export default function List() {
     }).then((res: any) => {
       setBookData(res.data.Items)
       setTotalPageCount(res.data.pageCount)
-      setCurrentPage(res.data.page)
+      console.log('fetchBookData: %d', currentPage)
     }).catch(error => {
       console.error(error)
     })
   }
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (searchValue == "") return
-    setCurrentPage(1)
-    fetchBookData(searchValue, currentPage)
+    await fetchBookData(searchValue, initialPage)
   }
 
   return (
@@ -48,13 +48,14 @@ export default function List() {
         searchValue={searchValue}
       />
       <div className='w-1/3 m-auto'>
-        <MyPaginate
-          currentPage={currentPage}
-          setCurrentPage={setCurrentPage}
-          totalPageCount={totalPageCount}
-          searchValue={searchValue}
-          fetchBookData={fetchBookData}
-        />
+        {
+          bookData.length > 0 ?
+            <div className='text-2xl mb-2 font-bold'>
+              <p>検索結果: </p>
+            </div>
+            :
+            ""
+        }
         {
           bookData ? bookData.map((book: responseBookData) => {
             return (
@@ -71,12 +72,24 @@ export default function List() {
                 largeImageUrl={book.Item.largeImageUrl}
                 reviewAverage={book.Item.reviewAverage}
                 reviewCount={book.Item.reviewCount}
-                salesData={book.Item.salesData}
+                salesDate={book.Item.salesDate}
               />
             )
           })
-        :
+            :
             <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
+        }
+        {
+          bookData.length > 0 ?
+            < MyPaginate
+              currentPage={currentPage}
+              setCurrentPage={setCurrentPage}
+              totalPageCount={totalPageCount}
+              searchValue={searchValue}
+              fetchBookData={fetchBookData}
+            />
+            :
+            ""
         }
       </div>
     </div>
