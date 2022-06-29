@@ -1,9 +1,9 @@
-import type {NextApiRequest, NextApiResponse} from 'next'
-import {cert} from 'firebase-admin/app'
+import type { NextApiRequest, NextApiResponse } from 'next'
+import { cert } from 'firebase-admin/app'
 import admin from "firebase-admin"
 import serviceAccount from "../../service-account-sdk.json"
 
-if(!admin.apps.length) {
+if (!admin.apps.length) {
   admin.initializeApp(
     {
       credential: cert(serviceAccount)
@@ -28,7 +28,7 @@ async function getBooks(res: NextApiResponse<Data[]>) {
       }
     ])
   } else {
-    let data:Data[] = []
+    let data: Data[] = []
     querySnapshots.forEach(shot => {
       data.push(
         {
@@ -41,26 +41,26 @@ async function getBooks(res: NextApiResponse<Data[]>) {
   res.end()
 }
 
-async function postBooks(req: NextApiRequest, res:NextApiResponse<Data>) {
+async function postBooks(req: NextApiRequest, res: NextApiResponse<Data>) {
   dbCollection.where("book_id", "==", req.body.book_id)
-  .get()
-  .then(snapShots => {
+    .get()
+    .then(snapShots => {
 
-    if (snapShots.empty) {
-      const insertData = {
-        book_id: req.body.book_id
+      if (snapShots.empty) {
+        const insertData = {
+          book_id: req.body.book_id
+        }
+        dbCollection.add(insertData)
       }
-      dbCollection.add(insertData)
-    }
 
-    snapShots.forEach(shot => {
-      dbCollection.doc(shot.id).delete()
+      snapShots.forEach(shot => {
+        dbCollection.doc(shot.id).delete()
+      })
     })
-  })
-  .catch(error => {
-    console.error(error)
-    res.end()
-  })
+    .catch(error => {
+      console.error(error)
+      res.end()
+    })
   res.end()
 }
 
@@ -88,11 +88,11 @@ export const fetchBookIds = async (res: NextApiResponse) => {
   let bookIds: string[] = []
   const unSubscribe = () => {
     dbCollection
-    .onSnapshot((snapshot) => {
-      snapshot.docs.map(doc => {
-        bookIds.push(doc.data().book_id)
+      .onSnapshot((snapshot) => {
+        snapshot.docs.map(doc => {
+          bookIds.push(doc.data().book_id)
+        })
       })
-    })
   }
   unSubscribe()
   console.log(bookIds)

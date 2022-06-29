@@ -1,14 +1,10 @@
-import axios from 'axios'
 import React, { useState, useEffect } from 'react'
 import shortid from 'shortid'
-import NoImage from '../svg/no-image.svg'
 import Heart from '../svg/heart.svg'
 import ClassNames from './ClassNames'
 import Stars from './stars'
 
 type props = {
-  isLike: boolean,
-  setIsLike: (arg: boolean) => void,
   author: string,
   title: string,
   booksGenreId: string,
@@ -23,8 +19,6 @@ type props = {
 
 export default function Item(props: props) {
   const {
-    isLike,
-    setIsLike,
     author,
     title,
     booksGenreId,
@@ -37,14 +31,14 @@ export default function Item(props: props) {
     salesDate,
   } = props
 
-  const replacedSalesDate = salesDate.replace(/(\d{4})年(\d{2})月(\d{2})日/, '$1/$2/$3')
+  const [isLike, setIsLike] = useState(false)
 
   const clickHandler = async () => {
     setIsLike(!isLike)
   }
 
   return (
-    <div className='relative flex h-52 space-x-4 m-auto mb-10 px-2 py-2 shadow-lg shadow-slate-400 bg-stone-50 rounded'>
+    <div className='relative flex h-52 space-x-4 m-auto mb-10 px-2 py-2 shadow-md bg-stone-50 rounded'>
       <img src={largeImageUrl} />
       <div className='text-left'>
         <a href={itemUrl} className="no-underline hover:underline hover:text-blue-600">
@@ -54,7 +48,7 @@ export default function Item(props: props) {
           <p>著者: {author}</p>
         </div>
         <div className='text-sm space-x-1'>
-          <p>発売日: {replacedSalesDate}</p>
+          <p>発売日: {salesDate}</p>
         </div>
         <Stars reviewAverage={reviewAverage} />
 

@@ -1,10 +1,13 @@
-import React, { isValidElement, useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Item from '../components/Item'
 import type { responseBookData } from '../pages/api/books'
 import books from '../pages/api/books'
 import shortid from 'shortid'
-import BookSearch from './BookSearch'
-import MyPaginate from './paginate'
+import BookSearch from '../components/BookSearch'
+import MyPaginate from '../components/paginate'
+import Logout from './Logout'
+import { auth } from '../lib/firebase'
+import { useRouter } from 'next/router'
 
 export default function List() {
   const initialPage = 1
@@ -12,15 +15,24 @@ export default function List() {
   const [bookData, setBookData] = useState<responseBookData[]>([])
   const [totalPageCount, setTotalPageCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(initialPage)
-  const [isLike, setIsLike] = useState(false)
+  const [totalBookCount, setTotalBookCount] = useState(0)
+  const router = useRouter()
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user: any) => {
+      if (!user) {
+        router.push("/Login")
+      }
+    })
+  }, [])
 
   const handleChangeValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }, [])
 
-  const fetchBookData = async (searchValue: string, currentPage: number) => {
+  const fetchBookData = (searchValue: string, currentPage: number) => {
     if (searchValue === "") return
-    await books.get("", {
+    books.get("", {
       params: {
         "keyword": searchValue,
         "page": currentPage
@@ -28,30 +40,36 @@ export default function List() {
     }).then((res: any) => {
       setBookData(res.data.Items)
       setTotalPageCount(res.data.pageCount)
-      console.log('fetchBookData: %d', currentPage)
+      setTotalBookCount(res.data.count)
     }).catch(error => {
       console.error(error)
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (searchValue == "") return
-    await fetchBookData(searchValue, initialPage)
+    fetchBookData(searchValue, initialPage)
+    setCurrentPage(initialPage)
   }
 
   return (
-    <div className='min-h-screen'>
-      <BookSearch
-        handleSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
-        handleChangeValue={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeValue(e)}
-        searchValue={searchValue}
-      />
+    <div className='min-h-screen bg-gray-200 pb-20'>
+      <div className='w-full bg-slate-600 h-20'>
+        <div className='flex pt-5'>
+          <BookSearch
+            handleSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
+            handleChangeValue={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeValue(e)}
+            searchValue={searchValue}
+          />
+          <Logout />
+        </div>
+      </div>
       <div className='w-1/3 m-auto'>
         {
           bookData.length > 0 ?
-            <div className='text-2xl mb-2 font-bold'>
-              <p>検索結果: </p>
+            <div className='text-2xl mb-2 text-slate-800'>
+              <p>検索結果: {totalBookCount}件</p>
             </div>
             :
             ""
@@ -60,8 +78,6 @@ export default function List() {
           bookData ? bookData.map((book: responseBookData) => {
             return (
               <Item
-                isLike={isLike}
-                setIsLike={setIsLike}
                 key={shortid.generate()}
                 author={book.Item.author}
                 title={book.Item.title}
@@ -81,7 +97,7 @@ export default function List() {
         }
         {
           bookData.length > 0 ?
-            < MyPaginate
+            <MyPaginate
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               totalPageCount={totalPageCount}
