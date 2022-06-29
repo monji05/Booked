@@ -1,4 +1,4 @@
-import React, { isValidElement, useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import Item from '../components/Item'
 import type { responseBookData } from '../pages/api/books'
 import books from '../pages/api/books'
@@ -12,15 +12,14 @@ export default function List() {
   const [bookData, setBookData] = useState<responseBookData[]>([])
   const [totalPageCount, setTotalPageCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(initialPage)
-  const [isLike, setIsLike] = useState(false)
 
   const handleChangeValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
   }, [])
 
-  const fetchBookData = async (searchValue: string, currentPage: number) => {
+  const fetchBookData = (searchValue: string, currentPage: number) => {
     if (searchValue === "") return
-    await books.get("", {
+    books.get("", {
       params: {
         "keyword": searchValue,
         "page": currentPage
@@ -28,16 +27,18 @@ export default function List() {
     }).then((res: any) => {
       setBookData(res.data.Items)
       setTotalPageCount(res.data.pageCount)
-      console.log('fetchBookData: %d', currentPage)
+      console.log(`in fetchBookData currentPage: ${currentPage}`)
     }).catch(error => {
       console.error(error)
     })
   }
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     if (searchValue == "") return
-    await fetchBookData(searchValue, initialPage)
+    fetchBookData(searchValue, initialPage)
+    setCurrentPage(initialPage)
+    console.log(`in handle submit currentPage:${currentPage}`)
   }
 
   return (
@@ -60,8 +61,6 @@ export default function List() {
           bookData ? bookData.map((book: responseBookData) => {
             return (
               <Item
-                isLike={isLike}
-                setIsLike={setIsLike}
                 key={shortid.generate()}
                 author={book.Item.author}
                 title={book.Item.title}
@@ -81,7 +80,7 @@ export default function List() {
         }
         {
           bookData.length > 0 ?
-            < MyPaginate
+            <MyPaginate
               currentPage={currentPage}
               setCurrentPage={setCurrentPage}
               totalPageCount={totalPageCount}

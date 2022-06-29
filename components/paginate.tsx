@@ -1,4 +1,4 @@
-import React, { useState, useEffect, ReactEventHandler } from 'react'
+import React, { useEffect, } from 'react'
 import ReactPaginate from 'react-paginate'
 
 type props = {
@@ -25,6 +25,8 @@ const MyPaginate = (props: props) => {
 
   useEffect(() => {
     fetchBookData(searchValue, currentPage)
+    setCurrentPage(currentPage)
+    console.log(`in paginate currentPage: ${currentPage}`)
   }, [currentPage])
 
   return (
@@ -32,9 +34,11 @@ const MyPaginate = (props: props) => {
       <ReactPaginate
         className='mb-2 flex justify-center text-xl p-1 space-x-1 text-blue-400'
         breakLabel="..."
+        initialPage={0}
+        forcePage={currentPage - 1}
+        disableInitialCallback={true}
         previousLabel={currentPage == 1 && searchValue ? "" : "<"}
         nextLabel={currentPage < totalPageCount ? ">" : ""}
-        initialPage={1}
         pageRangeDisplayed={1}
         onPageChange={onPageChange}
         marginPagesDisplayed={2}
