@@ -26,10 +26,6 @@ const MyPaginate = (props: props) => {
   useEffect(() => {
     fetchBookData(searchValue, currentPage)
     setCurrentPage(currentPage)
-<<<<<<< HEAD
-=======
-    console.log(`in paginate currentPage: ${currentPage}`)
->>>>>>> 9424b0495db4c8fb8764c3840377fcecaa01f64c
   }, [currentPage])
 
   return (

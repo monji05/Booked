@@ -15,7 +15,6 @@ export default function List() {
   const [bookData, setBookData] = useState<responseBookData[]>([])
   const [totalPageCount, setTotalPageCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(initialPage)
-<<<<<<< HEAD:pages/List.tsx
   const [totalBookCount, setTotalBookCount] = useState(0)
   const router = useRouter()
 
@@ -26,8 +25,6 @@ export default function List() {
       }
     })
   }, [])
-=======
->>>>>>> 9424b0495db4c8fb8764c3840377fcecaa01f64c:components/List.tsx
 
   const handleChangeValue = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(e.target.value)
