@@ -38,7 +38,7 @@ export default function Item(props: props) {
   }
 
   return (
-    <div className='relative flex h-52 space-x-4 m-auto mb-10 px-2 py-2 shadow-md bg-stone-50 rounded'>
+    <div className='relative flex h-52 space-x-4 m-auto mb-2 px-2 py-2 bg-white shadow-md rounded'>
       <img src={largeImageUrl} />
       <div className='text-left'>
         <a href={itemUrl} className="no-underline hover:underline hover:text-blue-600">

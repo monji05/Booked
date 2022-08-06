@@ -15,7 +15,7 @@ export type responseBookData = {
   }
 }
 
-const baseUrl = "https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404?format=json&applicationId=1091772165730830179"
+const baseUrl = "https://app.rakuten.co.jp/services/api/BooksTotal/Search/20170404"
 const books = axios.create({
   baseURL: baseUrl,
   responseType: "json",

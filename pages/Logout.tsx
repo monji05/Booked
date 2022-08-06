@@ -7,7 +7,7 @@ const Logout: FC = () => {
   const [currentUser, setCurrentUser] = useState<null | object>(null)
 
   useEffect(() => {
-    auth.onAuthStateChanged((user: User) => {
+    auth.onAuthStateChanged((user) => {
       if (user) {
         setCurrentUser(user)
         router.push("/List")
@@ -29,7 +29,7 @@ const Logout: FC = () => {
 
   return (
     <div className="w-1/12">
-      <button onClick={logOut} className="bg-slate-500 rounded px-2 py-2 text-slate-100 hover:bg-slate-400">Logout</button>
+      <button onClick={logOut} className="rounded font-bold px-2 py-1 text-slate-800 text-lg hover:text-white hover:bg-red-400">Logout</button>
     </div>
   )
 }

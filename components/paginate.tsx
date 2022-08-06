@@ -31,7 +31,7 @@ const MyPaginate = (props: props) => {
   return (
     <div>
       <ReactPaginate
-        className='mb-2 flex justify-center text-xl p-1 space-x-1 text-blue-400'
+        className='mb-2 flex justify-center text-xl p-1 text-slate-800 space-x-1'
         breakLabel="..."
         initialPage={0}
         forcePage={currentPage - 1}
@@ -43,9 +43,9 @@ const MyPaginate = (props: props) => {
         marginPagesDisplayed={2}
         pageCount={totalPageCount}
         pageClassName='page-item'
-        pageLinkClassName='page-link bg-white border-2 border-none rounded-full px-2'
+        pageLinkClassName='page-link bg-white border-2 border-none px-2 rounded-full'
         activeClassName='active rounded-full'
-        activeLinkClassName='active bg-amber-400 text-white'
+        activeLinkClassName='active bg-blue-500 text-white'
       />
     </div>
   )
