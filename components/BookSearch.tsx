@@ -40,11 +40,11 @@ export default function BookSearch(props: props) {
             focus:rounded-md
             sm:text-sm
             '
-            placeholder='本のタイトル、著者名を入力'
+            placeholder='Please type you looking for ...'
             onChange={handleChangeValue}
             value={searchValue}
           />
-          <button className='rounded-md bg-sky-500 hover:bg-sky-400 px-2 ml-2 text-m text-white'>検索</button>
+          <button className='rounded bg-blue-500 font-bold hover:bg-sky-400 px-2 ml-2 text-m text-white'>Seach</button>
         </label>
       </form>
     </div>

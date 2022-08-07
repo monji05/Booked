@@ -34,6 +34,7 @@ export default function List() {
     if (searchValue === "") return
     books.get("", {
       params: {
+        "applicationId": process.env.NEXT_PUBLIC_RAKUTEN_APPLICATION_ID,
         "keyword": searchValue,
         "page": currentPage
       }
@@ -54,8 +55,8 @@ export default function List() {
   }
 
   return (
-    <div className='min-h-screen bg-gray-200 pb-20'>
-      <div className='w-full bg-slate-600 h-20'>
+    <div className='min-h-screen pb-20 bg-neutral-100/60'>
+      <div className='w-full h-20'>
         <div className='flex pt-5'>
           <BookSearch
             handleSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
