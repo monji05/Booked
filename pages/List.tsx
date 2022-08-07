@@ -8,6 +8,7 @@ import MyPaginate from '../components/paginate'
 import Logout from './Logout'
 import { auth } from '../lib/firebase'
 import { useRouter } from 'next/router'
+import { env } from 'process'
 
 export default function List() {
   const initialPage = 1
