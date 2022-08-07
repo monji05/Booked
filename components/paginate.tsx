@@ -33,18 +33,17 @@ const MyPaginate = (props: props) => {
       <ReactPaginate
         className='mb-2 flex justify-center text-xl p-1 text-slate-800 space-x-1'
         breakLabel="..."
-        initialPage={0}
         forcePage={currentPage - 1}
         disableInitialCallback={true}
-        previousLabel={currentPage == 1 && searchValue ? "" : "<"}
+        previousLabel={currentPage == 1 ? "" : "<"}
         nextLabel={currentPage < totalPageCount ? ">" : ""}
         pageRangeDisplayed={1}
         onPageChange={onPageChange}
         marginPagesDisplayed={2}
         pageCount={totalPageCount}
         pageClassName='page-item'
-        pageLinkClassName='page-link bg-white border-2 border-none px-2 rounded-full'
-        activeClassName='active rounded-full'
+        pageLinkClassName='page-link border-2 border-none px-2 rounded-full'
+        activeClassName='active'
         activeLinkClassName='active bg-blue-500 text-white'
       />
     </div>

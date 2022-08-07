@@ -16,7 +16,22 @@ export default function List() {
   const [totalPageCount, setTotalPageCount] = useState(0)
   const [currentPage, setCurrentPage] = useState(initialPage)
   const [totalBookCount, setTotalBookCount] = useState(0)
+  const [fieldValue, setFieldValue] = useState(1)
+  const [selectValue, setSelectValue] = useState("0")
   const router = useRouter()
+
+  type Params = {
+    applicationId: string,
+    field: number,
+    page: number,
+    author?: string,
+    title?: string
+  }
+  const params: Params = {
+    "applicationId": process.env.NEXT_PUBLIC_RAKUTEN_APPLICATION_ID!,
+    "field": fieldValue,
+    "page": currentPage,
+  }
 
   useEffect(() => {
     auth.onAuthStateChanged((user: any) => {
@@ -30,14 +45,18 @@ export default function List() {
     setSearchValue(e.target.value)
   }, [])
 
+  const handleChangeSelect = useCallback((e: React.ChangeEvent<HTMLSelectElement>) => {
+    setSelectValue(e.currentTarget.value)
+  }, [])
+
   const fetchBookData = (searchValue: string, currentPage: number) => {
     if (searchValue === "") return
+
+    selectValue === "0" ? params.author = searchValue : params.title = searchValue
+    console.log(params)
+
     books.get("", {
-      params: {
-        "applicationId": process.env.NEXT_PUBLIC_RAKUTEN_APPLICATION_ID,
-        "keyword": searchValue,
-        "page": currentPage
-      }
+      params: params
     }).then((res: any) => {
       setBookData(res.data.Items)
       setTotalPageCount(res.data.pageCount)
@@ -62,11 +81,13 @@ export default function List() {
             handleSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
             handleChangeValue={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeValue(e)}
             searchValue={searchValue}
+            handleChangeSelect={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeSelect(e)}
+            selectValue={selectValue}
           />
           <Logout />
         </div>
       </div>
-      <div className='w-1/3 m-auto'>
+      <div className='sm:w-2/3 lg:w-1/4  m-auto'>
         {
           bookData.length > 0 ?
             <div className='text-2xl mb-2 text-slate-800'>
@@ -94,7 +115,7 @@ export default function List() {
             )
           })
             :
-            <div className='border-solid text-center text-xl text-rose-500'>該当するものはありませんでした</div>
+            <div className='border-solid text-center text-xl text-rose-500'>Not found .</div>
         }
         {
           bookData.length > 0 ?
