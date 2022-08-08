@@ -9,6 +9,14 @@ import Logout from './Logout'
 import { auth } from '../lib/firebase'
 import { useRouter } from 'next/router'
 
+type Params = {
+  applicationId: string,
+  field: number,
+  page: number,
+  author?: string,
+  title?: string
+}
+
 export default function List() {
   const initialPage = 1
   const [searchValue, setSearchValue] = useState("")
@@ -20,13 +28,6 @@ export default function List() {
   const [selectValue, setSelectValue] = useState("0")
   const router = useRouter()
 
-  type Params = {
-    applicationId: string,
-    field: number,
-    page: number,
-    author?: string,
-    title?: string
-  }
   const params: Params = {
     "applicationId": process.env.NEXT_PUBLIC_RAKUTEN_APPLICATION_ID!,
     "field": fieldValue,
@@ -81,8 +82,7 @@ export default function List() {
             handleSubmit={(e: React.FormEvent<HTMLFormElement>) => handleSubmit(e)}
             handleChangeValue={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeValue(e)}
             searchValue={searchValue}
-            handleChangeSelect={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeSelect(e)}
-            selectValue={selectValue}
+            handleChangeSelect={(e: React.ChangeEvent<HTMLSelectElement>) => handleChangeSelect(e)}
           />
           <Logout />
         </div>
